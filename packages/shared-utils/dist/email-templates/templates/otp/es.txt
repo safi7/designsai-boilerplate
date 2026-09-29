@@ -1,0 +1,9 @@
+{{heading}}
+
+{{intro}}
+
+    {{code}}
+
+Este código caduca en {{expiresInMinutes}} minutos. Si no lo solicitaste, puedes ignorar este correo.
+
+— {{appName}}

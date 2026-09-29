@@ -1,0 +1,22 @@
+1:"$Sreact.fragment"
+2:"$Sreact.suspense"
+3:I[3678,["/_next/static/chunks/1ok3bfadrmg5d.js","/_next/static/chunks/1og8dv9_um9t9.js","/_next/static/chunks/0ldbim-tg8k_5.js","/_next/static/chunks/2mj6yqpiz4cgg.js","/_next/static/chunks/3ln-uz4eayx7g.js","/_next/static/chunks/23ep3hs7ws6oz.js","/_next/static/chunks/44zi8vgadeu-l.js","/_next/static/chunks/040ytz3j18_f6.js"],"SignInForm"]
+4:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"OutletBoundary"]
+8:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"ViewportBoundary"]
+9:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"MetadataBoundary"]
+a:I[27201,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"IconMark"]
+c:I[39756,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"default"]
+d:I[37457,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"default"]
+7:X
+f:X
+f:C
+0:{"buildId":"d-_DPWfGJzJ8Ky2v1m3TU","data":[{"rsc":["$","$1","c",{"children":[["$","$2",null,{"children":["$","$L3",null,{}]}],[["$","script","script-0",{"src":"/_next/static/chunks/2mj6yqpiz4cgg.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/3ln-uz4eayx7g.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/23ep3hs7ws6oz.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/44zi8vgadeu-l.js","async":true}],["$","script","script-4",{"src":"/_next/static/chunks/040ytz3j18_f6.js","async":true}]],["$","$L4",null,{"children":["$","$2",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":"$@6","staleTime":"$7","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L8",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#ffffff","media":"(prefers-color-scheme: light)"}],["$","meta","3",{"name":"theme-color","content":"#0a0a0a","media":"(prefers-color-scheme: dark)"}]]}],["$","div",null,{"hidden":true,"children":["$","$L9",null,{"children":["$","$2",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Sign in · Boilerplate AI"}],["$","meta","1",{"name":"description","content":"AI assistant with accounts, credits and streaming chat."}],["$","link","2",{"rel":"icon","href":"/icon.svg?icon.1vba8hx2mc3vb.svg","sizes":"any","type":"image/svg+xml"}],["$","$La","3",{}]]}]}]}],null]}],"isPartial":"$@b","staleTime":"$7","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lc",null,{"parallelRouterKey":"children","template":["$","$Ld",null,{}]}]]}],"isPartial":"$@e","staleTime":"$7","varyParams":"$f"},{"rsc":["$","$1","c",{"children":[null,["$","main",null,{"className":"relative flex min-h-dvh items-center justify-center bg-muted/40 px-4 py-12","children":["$","div",null,{"className":"w-full max-w-sm","children":[["$","div",null,{"className":"mb-8 flex items-center justify-center gap-2 text-lg font-semibold","children":[["$","span",null,{"className":"flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground","children":["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-sparkles size-4","aria-hidden":true,"children":[["$","path","1s2grr",{"d":"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"}],["$","path","1rf3ol",{"d":"M20 2v4"}],["$","path","gwowj6",{"d":"M22 4h-4"}],["$","circle","6kqj1y",{"cx":"4","cy":"20","r":"2"}],"$undefined"]}]}],"Boilerplate AI"]}],["$","$Lc",null,{"parallelRouterKey":"children","template":["$","$Ld",null,{}]}]]}]}]]}],"isPartial":"$@10","staleTime":"$7","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@11","rootVaryParams":null,"needsRuntimeRequest":"$@12"}
+5:null
+12:true
+7:300
+7:C
+11:0
+b:"$undefined"
+e:"$undefined"
+10:"$undefined"
+6:"$undefined"

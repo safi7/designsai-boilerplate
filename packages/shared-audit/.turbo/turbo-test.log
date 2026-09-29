@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/safi/development/designsai-boilerplate/packages/shared-audit
+
+ ✓ src/audit.service.test.ts (2 tests) 54ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  09:32:08
+   Duration  849ms (transform 69ms, setup 0ms, collect 491ms, tests 54ms, environment 2ms, prepare 101ms)
+

@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/safi/development/designsai-boilerplate/packages/shared-prisma
+
+ ✓ src/database-url.test.ts (4 tests) 2ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  09:32:03
+   Duration  397ms (transform 40ms, setup 0ms, collect 49ms, tests 2ms, environment 0ms, prepare 47ms)
+

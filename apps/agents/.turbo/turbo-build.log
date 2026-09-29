@@ -1,0 +1,117 @@
+[32mINFO[39m [2026-09-29 09:32:06.646 +0800] (Mastra CLI): [36mAnalyzing dependencies...[39m
+[32mINFO[39m [2026-09-29 09:32:12.270 +0800] (Mastra CLI): [36mOptimizing dependencies...[39m
+[32mINFO[39m [2026-09-29 09:32:12.430 +0800] (Mastra CLI): [36mPackaging workspace dependencies[39m
+    [35mcount[39m: 1
+[32mINFO[39m [2026-09-29 09:32:12.431 +0800] (Mastra CLI): [36mPackaging batch 1/1: @boilerplate/shared-schemas[39m
+➤ YN0000: .turbo/turbo-build.log
+[32mINFO[39m [2026-09-29 09:32:12.843 +0800] (Mastra CLI): [36m➤ YN0000: .turbo/turbo-build.log[39m
+➤ YN0000: .turbo/turbo-lint.log
+➤ YN0000: .turbo/turbo-test.log
+➤ YN0000: .turbo/turbo-type-check.log
+➤ YN0000: dist/ask-ai.d.ts
+➤ YN0000: dist/ask-ai.d.ts.map
+➤ YN0000: dist/ask-ai.js
+➤ YN0000: dist/ask-ai.js.map
+➤ YN0000: dist/auth.d.ts
+➤ YN0000: dist/auth.d.ts.map
+➤ YN0000: dist/auth.js
+➤ YN0000: dist/auth.js.map
+➤ YN0000: dist/common.d.ts
+➤ YN0000: dist/common.d.ts.map
+➤ YN0000: dist/common.js
+➤ YN0000: dist/common.js.map
+➤ YN0000: dist/credits.d.ts
+➤ YN0000: dist/credits.d.ts.map
+➤ YN0000: dist/credits.js
+➤ YN0000: dist/credits.js.map
+➤ YN0000: dist/index.d.ts
+➤ YN0000: dist/index.d.ts.map
+➤ YN0000: dist/index.js
+➤ YN0000: dist/index.js.map
+➤ YN0000: dist/users.d.ts
+➤ YN0000: dist/users.d.ts.map
+➤ YN0000: dist/users.js
+➤ YN0000: dist/users.js.map
+➤ YN0000: package.json
+➤ YN0000: src/ask-ai.ts
+➤ YN0000: src/auth.ts
+➤ YN0000: src/common.ts
+➤ YN0000: src/credits.ts
+➤ YN0000: src/index.ts
+➤ YN0000: src/schemas.test.ts
+➤ YN0000: src/users.ts
+➤ YN0000: tsconfig.json
+[32mINFO[39m [2026-09-29 09:32:12.844 +0800] (Mastra CLI): [36m➤ YN0000: .turbo/turbo-lint.log
+➤ YN0000: .turbo/turbo-test.log
+➤ YN0000: .turbo/turbo-type-check.log
+➤ YN0000: dist/ask-ai.d.ts
+➤ YN0000: dist/ask-ai.d.ts.map
+➤ YN0000: dist/ask-ai.js
+➤ YN0000: dist/ask-ai.js.map
+➤ YN0000: dist/auth.d.ts
+➤ YN0000: dist/auth.d.ts.map
+➤ YN0000: dist/auth.js
+➤ YN0000: dist/auth.js.map
+➤ YN0000: dist/common.d.ts
+➤ YN0000: dist/common.d.ts.map
+➤ YN0000: dist/common.js
+➤ YN0000: dist/common.js.map
+➤ YN0000: dist/credits.d.ts
+➤ YN0000: dist/credits.d.ts.map
+➤ YN0000: dist/credits.js
+➤ YN0000: dist/credits.js.map
+➤ YN0000: dist/index.d.ts
+➤ YN0000: dist/index.d.ts.map
+➤ YN0000: dist/index.js
+➤ YN0000: dist/index.js.map
+➤ YN0000: dist/users.d.ts
+➤ YN0000: dist/users.d.ts.map
+➤ YN0000: dist/users.js
+➤ YN0000: dist/users.js.map
+➤ YN0000: package.json
+➤ YN0000: src/ask-ai.ts
+➤ YN0000: src/auth.ts
+➤ YN0000: src/common.ts
+➤ YN0000: src/credits.ts
+➤ YN0000: src/index.ts
+➤ YN0000: src/schemas.test.ts
+➤ YN0000: src/users.ts
+➤ YN0000: tsconfig.json[39m
+➤ YN0000: Package archive generated in /Users/safi/development/designsai-boilerplate/apps/agents/.mastra/output/workspace-module/boilerplate-shared-schemas-0.1.0.tgz
+➤ YN0000: Done in 0s 119ms
+[32mINFO[39m [2026-09-29 09:32:12.951 +0800] (Mastra CLI): [36m➤ YN0000: Package archive generated in /Users/safi/development/designsai-boilerplate/apps/agents/.mastra/output/workspace-module/boilerplate-shared-schemas-0.1.0.tgz
+➤ YN0000: Done in 0s 119ms[39m
+[32mINFO[39m [2026-09-29 09:32:12.988 +0800] (Mastra CLI): [36mSuccessfully packaged workspace dependencies[39m
+    [35mcount[39m: 1
+[32mINFO[39m [2026-09-29 09:32:12.989 +0800] (Mastra CLI): [36mBundling Mastra application[39m
+[32mINFO[39m [2026-09-29 09:32:14.422 +0800] (Mastra CLI): [36mBundling Mastra done[39m
+[32mINFO[39m [2026-09-29 09:32:14.422 +0800] (Mastra CLI): [36mCopying public files[39m
+[32mINFO[39m [2026-09-29 09:32:14.422 +0800] (Mastra CLI): [36mDone copying public files[39m
+[32mINFO[39m [2026-09-29 09:32:14.422 +0800] (Mastra CLI): [36mCopying .npmrc file[39m
+[32mINFO[39m [2026-09-29 09:32:14.422 +0800] (Mastra CLI): [36mDone copying .npmrc file[39m
+[32mINFO[39m [2026-09-29 09:32:14.423 +0800] (Mastra CLI): [36mUpdating dependency lockfile and installing dependencies[39m
+➤ YN0000: · Yarn 4.9.2
+[32mINFO[39m [2026-09-29 09:32:14.546 +0800] (Mastra CLI): [36m➤ YN0000: · Yarn 4.9.2[39m
+➤ YN0000: ┌ Resolution step
+[32mINFO[39m [2026-09-29 09:32:14.549 +0800] (Mastra CLI): [36m➤ YN0000: ┌ Resolution step[39m
+➤ YN0085: │ + @boilerplate/shared-schemas@file:./workspace-module/boilerplate-shared-schemas-0.1.0.tgz#./workspace-module/boilerplate-shared-schemas-0.1.0.tgz::hash=de3616&locator=server%40workspace%3A., and 1 more.
+[32mINFO[39m [2026-09-29 09:32:14.744 +0800] (Mastra CLI): [36m➤ YN0085: │ + @boilerplate/shared-schemas@file:./workspace-module/boilerplate-shared-schemas-0.1.0.tgz#./workspace-module/boilerplate-shared-schemas-0.1.0.tgz::hash=de3616&locator=server%40workspace%3A., and 1 more.[39m
+➤ YN0085: │ - @acemir/cssom@npm:0.9.31, @adobe/css-tools@npm:4.5.0, @alloc/quick-lru@npm:5.3.0, @ampproject/remapping@npm:2.3.0, @asamuzakjp/css-color@npm:4.1.2, and 1045 more.
+[32mINFO[39m [2026-09-29 09:32:14.744 +0800] (Mastra CLI): [36m➤ YN0085: │ - @acemir/cssom@npm:0.9.31, @adobe/css-tools@npm:4.5.0, @alloc/quick-lru@npm:5.3.0, @ampproject/remapping@npm:2.3.0, @asamuzakjp/css-color@npm:4.1.2, and 1045 more.[39m
+➤ YN0000: └ Completed
+[32mINFO[39m [2026-09-29 09:32:14.746 +0800] (Mastra CLI): [36m➤ YN0000: └ Completed[39m
+➤ YN0000: ┌ Fetch step
+[32mINFO[39m [2026-09-29 09:32:14.747 +0800] (Mastra CLI): [36m➤ YN0000: ┌ Fetch step[39m
+➤ YN0013: │ A package was added to the project (+ 100.06 KiB).
+[32mINFO[39m [2026-09-29 09:32:14.901 +0800] (Mastra CLI): [36m➤ YN0013: │ A package was added to the project (+ 100.06 KiB).[39m
+➤ YN0000: └ Completed
+[32mINFO[39m [2026-09-29 09:32:14.901 +0800] (Mastra CLI): [36m➤ YN0000: └ Completed[39m
+➤ YN0000: ┌ Link step
+[32mINFO[39m [2026-09-29 09:32:14.905 +0800] (Mastra CLI): [36m➤ YN0000: ┌ Link step[39m
+➤ YN0000: └ Completed in 0s 977ms
+[32mINFO[39m [2026-09-29 09:32:15.883 +0800] (Mastra CLI): [36m➤ YN0000: └ Completed in 0s 977ms[39m
+➤ YN0000: · Done in 1s 345ms
+[32mINFO[39m [2026-09-29 09:32:15.891 +0800] (Mastra CLI): [36m➤ YN0000: · Done in 1s 345ms[39m
+[32mINFO[39m [2026-09-29 09:32:15.901 +0800] (Mastra CLI): [36mDone updating dependency lockfile and installing dependencies[39m
+[32mINFO[39m [2026-09-29 09:32:15.926 +0800] (Mastra CLI): [36mBuild successful, you can now deploy the .mastra/output directory to your target platform.[39m
+[32mINFO[39m [2026-09-29 09:32:15.926 +0800] (Mastra CLI): [36mTo start the server, run: node .mastra/output/index.mjs[39m

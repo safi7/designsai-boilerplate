@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /Users/safi/development/designsai-boilerplate/apps/agents
+
+ ✓ src/mastra/agents.test.ts (11 tests) 615ms
+   ✓ mock model through a real Mastra agent > streams text and reports usage  577ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  14:30:40
+   Duration  2.18s (transform 101ms, setup 0ms, collect 1.23s, tests 615ms, environment 0ms, prepare 142ms)
+

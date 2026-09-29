@@ -1,0 +1,15 @@
+{
+  "/[locale]/(app)/account/billing/page": "/[locale]/account/billing",
+  "/[locale]/(app)/account/page": "/[locale]/account",
+  "/[locale]/(app)/chat/[threadId]/page": "/[locale]/chat/[threadId]",
+  "/[locale]/(app)/chat/page": "/[locale]/chat",
+  "/[locale]/auth/forgot-password/page": "/[locale]/auth/forgot-password",
+  "/[locale]/auth/sign-in/page": "/[locale]/auth/sign-in",
+  "/[locale]/auth/sign-up/page": "/[locale]/auth/sign-up",
+  "/[locale]/auth/verify-email/page": "/[locale]/auth/verify-email",
+  "/[locale]/page": "/[locale]",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/health/route": "/health",
+  "/icon.svg/route": "/icon.svg"
+}

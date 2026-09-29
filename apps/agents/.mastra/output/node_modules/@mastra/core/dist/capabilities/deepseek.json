@@ -1,0 +1,5 @@
+{
+  "attachment": ["deepseek-v4-flash-vision-exp"],
+  "temperature": ["deepseek-v4-flash", "deepseek-v4-flash-vision-exp", "deepseek-v4-pro"],
+  "structuredOutput": ["deepseek-v4-flash", "deepseek-v4-flash-vision-exp", "deepseek-v4-pro"]
+}

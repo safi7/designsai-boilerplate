@@ -1,0 +1,25 @@
+1:"$Sreact.fragment"
+2:I[47257,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"ClientPageRoot"]
+3:I[27436,["/_next/static/chunks/1ok3bfadrmg5d.js","/_next/static/chunks/1og8dv9_um9t9.js","/_next/static/chunks/0ldbim-tg8k_5.js","/_next/static/chunks/0pcojis99bcok.js","/_next/static/chunks/040ytz3j18_f6.js","/_next/static/chunks/44zi8vgadeu-l.js","/_next/static/chunks/23ep3hs7ws6oz.js"],"default"]
+6:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+b:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"ViewportBoundary"]
+c:I[97367,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"MetadataBoundary"]
+d:I[27201,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"IconMark"]
+f:I[39756,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"default"]
+10:I[37457,["/_next/static/chunks/0ehjiuuxbbhq9.js"],"default"]
+a:X
+12:X
+12:C
+0:{"buildId":"d-_DPWfGJzJ8Ky2v1m3TU","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{"locale":"en"},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/_next/static/chunks/0pcojis99bcok.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/040ytz3j18_f6.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/44zi8vgadeu-l.js","async":true}],["$","script","script-3",{"src":"/_next/static/chunks/23ep3hs7ws6oz.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":"$@9","staleTime":"$a","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$Lb",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#ffffff","media":"(prefers-color-scheme: light)"}],["$","meta","3",{"name":"theme-color","content":"#0a0a0a","media":"(prefers-color-scheme: dark)"}]]}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Boilerplate AI"}],["$","meta","1",{"name":"description","content":"AI assistant with accounts, credits and streaming chat."}],["$","link","2",{"rel":"icon","href":"/icon.svg?icon.1vba8hx2mc3vb.svg","sizes":"any","type":"image/svg+xml"}],["$","$Ld","3",{}]]}]}]}],null]}],"isPartial":"$@e","staleTime":"$a","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Lf",null,{"parallelRouterKey":"children","template":["$","$L10",null,{}]}]]}],"isPartial":"$@11","staleTime":"$a","varyParams":"$12"},{"rsc":["$","$1","c",{"children":[null,["$","main",null,{"className":"relative flex min-h-dvh items-center justify-center bg-muted/40 px-4 py-12","children":["$","div",null,{"className":"w-full max-w-sm","children":[["$","div",null,{"className":"mb-8 flex items-center justify-center gap-2 text-lg font-semibold","children":[["$","span",null,{"className":"flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground","children":["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-sparkles size-4","aria-hidden":true,"children":[["$","path","1s2grr",{"d":"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"}],["$","path","1rf3ol",{"d":"M20 2v4"}],["$","path","gwowj6",{"d":"M22 4h-4"}],["$","circle","6kqj1y",{"cx":"4","cy":"20","r":"2"}],"$undefined"]}]}],"Boilerplate AI"]}],["$","$Lf",null,{"parallelRouterKey":"children","template":["$","$L10",null,{}]}]]}]}]]}],"isPartial":"$@13","staleTime":"$a","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@14","rootVaryParams":null,"needsRuntimeRequest":"$@15"}
+4:{}
+5:"$0:data:0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null
+15:true
+a:300
+a:C
+14:0
+e:"$undefined"
+11:"$undefined"
+13:"$undefined"
+9:"$undefined"

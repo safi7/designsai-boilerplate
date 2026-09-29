@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /Users/safi/development/designsai-boilerplate/packages/shared-utils
+
+ ✓ src/errors/app-error.test.ts (3 tests) 1ms
+ ✓ src/email-templates/email-templates.test.ts (5 tests) 20ms
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  14:30:40
+   Duration  751ms (transform 76ms, setup 0ms, collect 118ms, tests 21ms, environment 1ms, prepare 426ms)
+

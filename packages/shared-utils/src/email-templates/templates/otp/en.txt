@@ -1,0 +1,9 @@
+{{heading}}
+
+{{intro}}
+
+    {{code}}
+
+This code expires in {{expiresInMinutes}} minutes. If you didn't request it, you can safely ignore this email.
+
+— {{appName}}

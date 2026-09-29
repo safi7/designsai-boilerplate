@@ -1,0 +1,7 @@
+Gracias por tu compra, {{name}}
+
+Recibimos tu pago de {{amount}} {{currency}} y añadimos {{credits}} créditos a tu cuenta.
+
+Ver facturación: {{appUrl}}/es/account/billing
+
+— {{appName}}

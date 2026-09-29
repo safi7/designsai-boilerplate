@@ -1,0 +1,3 @@
+{
+  "/[locale]/(app)/chat/[threadId]/page": "app/[locale]/(app)/chat/[threadId]/page.js"
+}

@@ -1,0 +1,421 @@
+// =============================================================================
+// Boilerplate data model (MySQL 8)
+//
+// Bounded contexts, in file order:
+//   1. Identity   — users, sessions, OAuth accounts
+//   2. Audit      — append-only security/audit trail
+//   3. Credits    — ledger (sources, transactions, allocations, usage), packages, payments
+//   4. Agents     — thread directory + Ask AI conversation event log + token usage
+//
+// Conventions:
+//   - Model names are PascalCase; tables are snake_case via @@map.
+//   - Money-like credit amounts are DECIMAL(18,6): never floats.
+//   - User ids are UNSIGNED BIGINT everywhere, so joins never mix key spaces.
+// =============================================================================
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// 1. Identity
+// -----------------------------------------------------------------------------
+
+enum UserStatus {
+  /// Registered, email not yet verified.
+  pending
+  active
+  banned
+  deactivated
+}
+
+model User {
+  id              BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  name            String     @db.VarChar(255)
+  lastName        String?    @map("last_name") @db.VarChar(255)
+  email           String     @unique(map: "users_email_unique") @db.VarChar(255)
+  /// bcrypt hash. Null for accounts created through SSO only.
+  password        String?    @db.VarChar(255)
+  status          UserStatus @default(pending)
+  emailVerifiedAt DateTime?  @map("email_verified_at") @db.Timestamp(0)
+  language        String     @default("en") @db.VarChar(5)
+  country         String?    @db.VarChar(5)
+  /// Object storage key of the avatar image (never a public URL).
+  avatarKey       String?    @map("avatar_key") @db.VarChar(255)
+  lastLoginAt     DateTime?  @map("last_login_at") @db.Timestamp(0)
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt       DateTime   @updatedAt @map("updated_at") @db.Timestamp(0)
+  deletedAt       DateTime?  @map("deleted_at") @db.Timestamp(0)
+
+  sessions           UserSession[]
+  oauthAccounts      OAuthAccount[]
+  auditLogs          AuditLog[]
+  creditSources      CreditSource[]
+  creditTransactions CreditTransaction[]
+  creditUsageLogs    CreditUsageLog[]
+  payments           Payment[]
+  agentThreads       AgentThread[]
+
+  @@index([status], map: "users_status_index")
+  @@map("users")
+}
+
+/// Server-side session backing every issued JWT (the JWT carries `jti`).
+/// MySQL is the source of truth; Redis caches validity for the hot path.
+model UserSession {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  userId     BigInt   @map("user_id") @db.UnsignedBigInt
+  jti        String   @unique @db.VarChar(36)
+  userAgent  String?  @map("user_agent") @db.VarChar(500)
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  expiresAt  DateTime @map("expires_at") @db.DateTime(0)
+  lastUsedAt DateTime @default(now()) @map("last_used_at") @db.DateTime(0)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt], map: "user_sessions_user_expires_index")
+  @@index([expiresAt], map: "user_sessions_expires_index")
+  @@map("user_sessions")
+}
+
+enum OAuthProvider {
+  google
+}
+
+model OAuthAccount {
+  id                BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  userId            BigInt        @map("user_id") @db.UnsignedBigInt
+  provider          OAuthProvider
+  providerAccountId String        @map("provider_account_id") @db.VarChar(255)
+  email             String        @db.VarChar(255)
+  lastLoginAt       DateTime      @default(now()) @map("last_login_at") @db.Timestamp(0)
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], map: "oauth_accounts_provider_account_unique")
+  @@index([userId], map: "oauth_accounts_user_index")
+  @@map("oauth_accounts")
+}
+
+// -----------------------------------------------------------------------------
+// 2. Audit
+// -----------------------------------------------------------------------------
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  UPLOAD
+  PURCHASE
+  PASSWORD_CHANGE
+  PASSWORD_RESET
+  EMAIL_VERIFY
+}
+
+enum AuditResourceType {
+  User
+  Session
+  Profile
+  CreditTransaction
+  Payment
+  AgentThread
+}
+
+enum AuditStatus {
+  success
+  failed
+}
+
+model AuditLog {
+  id            BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  userId        BigInt?           @map("user_id") @db.UnsignedBigInt
+  action        AuditAction
+  resourceType  AuditResourceType @map("resource_type")
+  resourceId    String?           @map("resource_id") @db.VarChar(191)
+  status        AuditStatus       @default(success)
+  description   String?           @db.Text
+  changes       Json?
+  metadata      Json?
+  ipAddress     String?           @map("ip_address") @db.VarChar(45)
+  userAgent     String?           @map("user_agent") @db.VarChar(500)
+  requestId     String?           @map("request_id") @db.VarChar(64)
+  requestMethod String?           @map("request_method") @db.VarChar(10)
+  endpoint      String?           @db.VarChar(255)
+  errorMessage  String?           @map("error_message") @db.Text
+  createdAt     DateTime          @default(now()) @map("created_at") @db.Timestamp(3)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt], map: "audit_logs_user_created_index")
+  @@index([resourceType, resourceId], map: "audit_logs_resource_index")
+  @@index([action, createdAt], map: "audit_logs_action_created_index")
+  @@map("audit_logs")
+}
+
+// -----------------------------------------------------------------------------
+// 3. Credits
+//
+// Double-entry-style ledger:
+//   CreditSource            a grant of credits (bonus, purchase…) with its own remaining balance and expiry
+//   CreditTransaction       one immutable ledger entry (grant / usage / refund / expiry / adjustment)
+//   CreditTransactionSource which sources a transaction drew from, and by how much
+//   CreditUsageLog          what a usage transaction paid for (feature, model, tokens)
+//
+// Balance = SUM(remaining) of active, unexpired sources. Every mutation happens in
+// one DB transaction with the affected source rows locked, and every write path
+// carries an idempotency key so retries can never double-charge or double-grant.
+// -----------------------------------------------------------------------------
+
+enum CreditSourceType {
+  signup_bonus
+  purchase
+  promotional
+  manual_adjustment
+  refund
+}
+
+enum CreditTransactionType {
+  grant
+  usage
+  refund
+  expiry
+  adjustment
+}
+
+model CreditSource {
+  id             BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  userId         BigInt           @map("user_id") @db.UnsignedBigInt
+  sourceType     CreditSourceType @map("source_type")
+  totalAllocated Decimal          @map("total_allocated") @db.Decimal(18, 6)
+  remaining      Decimal          @db.Decimal(18, 6)
+  referenceType  String?          @map("reference_type") @db.VarChar(50)
+  referenceId    String?          @map("reference_id") @db.VarChar(191)
+  expiresAt      DateTime?        @map("expires_at")
+  isActive       Boolean          @default(true) @map("is_active")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocations CreditTransactionSource[]
+
+  /// Balance and spend-order (soonest expiry first) both read this index.
+  @@index([userId, isActive, expiresAt], map: "credit_sources_user_active_expires_index")
+  @@map("credit_sources")
+}
+
+model CreditTransaction {
+  id             BigInt                @id @default(autoincrement()) @db.UnsignedBigInt
+  userId         BigInt                @map("user_id") @db.UnsignedBigInt
+  type           CreditTransactionType
+  /// Always positive; the direction is carried by `type`.
+  amount         Decimal               @db.Decimal(18, 6)
+  balanceBefore  Decimal               @map("balance_before") @db.Decimal(18, 6)
+  balanceAfter   Decimal               @map("balance_after") @db.Decimal(18, 6)
+  /// Unique claim that makes every ledger write safe to retry.
+  idempotencyKey String?               @unique(map: "credit_transactions_idempotency_unique") @map("idempotency_key") @db.VarChar(191)
+  referenceType  String?               @map("reference_type") @db.VarChar(50)
+  referenceId    String?               @map("reference_id") @db.VarChar(191)
+  description    String?               @db.VarChar(500)
+  metadata       Json?
+  createdAt      DateTime              @default(now()) @map("created_at")
+
+  user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocations CreditTransactionSource[]
+  usageLog    CreditUsageLog?
+
+  @@index([userId, createdAt], map: "credit_transactions_user_created_index")
+  @@index([referenceType, referenceId], map: "credit_transactions_reference_index")
+  @@map("credit_transactions")
+}
+
+model CreditTransactionSource {
+  id                  BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  creditTransactionId BigInt   @map("credit_transaction_id") @db.UnsignedBigInt
+  creditSourceId      BigInt   @map("credit_source_id") @db.UnsignedBigInt
+  amount              Decimal  @db.Decimal(18, 6)
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  transaction CreditTransaction @relation(fields: [creditTransactionId], references: [id], onDelete: Cascade)
+  source      CreditSource      @relation(fields: [creditSourceId], references: [id], onDelete: Cascade)
+
+  @@index([creditTransactionId], map: "credit_transaction_sources_transaction_index")
+  @@index([creditSourceId], map: "credit_transaction_sources_source_index")
+  @@map("credit_transaction_sources")
+}
+
+model CreditUsageLog {
+  id                  BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  userId              BigInt   @map("user_id") @db.UnsignedBigInt
+  creditTransactionId BigInt   @unique @map("credit_transaction_id") @db.UnsignedBigInt
+  feature             String   @db.VarChar(50)
+  amount              Decimal  @db.Decimal(18, 6)
+  provider            String?  @db.VarChar(50)
+  model               String?  @db.VarChar(191)
+  inputTokens         Int      @default(0) @map("input_tokens")
+  outputTokens        Int      @default(0) @map("output_tokens")
+  threadId            String?  @map("thread_id") @db.VarChar(191)
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction CreditTransaction @relation(fields: [creditTransactionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt], map: "credit_usage_logs_user_created_index")
+  @@index([threadId], map: "credit_usage_logs_thread_index")
+  @@map("credit_usage_logs")
+}
+
+model CreditPackage {
+  id            BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  packageId     String   @unique(map: "credit_packages_package_id_unique") @map("package_id") @db.VarChar(50)
+  name          String   @db.VarChar(100)
+  credits       Int
+  /// Price in the currency's major unit (e.g. 9.99 USD).
+  price         Decimal  @db.Decimal(10, 2)
+  currency      String   @db.VarChar(3)
+  /// Days until purchased credits expire. Null = never.
+  validityDays  Int?     @map("validity_days")
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  payments Payment[]
+
+  @@index([isActive, sortOrder], map: "credit_packages_active_sort_index")
+  @@map("credit_packages")
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  expired
+}
+
+model Payment {
+  id                BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  userId            BigInt        @map("user_id") @db.UnsignedBigInt
+  creditPackageId   BigInt        @map("credit_package_id") @db.UnsignedBigInt
+  provider          String        @default("stripe") @db.VarChar(20)
+  /// Stripe Checkout Session id; the webhook resolves the payment through it.
+  providerSessionId String        @unique(map: "payments_provider_session_unique") @map("provider_session_id") @db.VarChar(255)
+  status            PaymentStatus @default(pending)
+  credits           Int
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String        @db.VarChar(3)
+  completedAt       DateTime?     @map("completed_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  package CreditPackage @relation(fields: [creditPackageId], references: [id])
+
+  @@index([userId, createdAt], map: "payments_user_created_index")
+  @@map("payments")
+}
+
+// -----------------------------------------------------------------------------
+// 4. Agents
+//
+// AgentThread is the domain-agnostic thread directory (sidebar, search,
+// favourites). Each domain keeps its own state keyed by the thread; Ask AI
+// keeps an append-only event log with a monotonically increasing cursor,
+// which is what makes the SSE stream resumable after a reconnect.
+// -----------------------------------------------------------------------------
+
+enum AgentDomain {
+  ask_ai
+}
+
+enum AgentThreadStatus {
+  idle
+  running
+  failed
+}
+
+model AgentThread {
+  id            String            @id @default(cuid())
+  userId        BigInt            @map("user_id") @db.UnsignedBigInt
+  domain        AgentDomain
+  title         String            @db.VarChar(191)
+  status        AgentThreadStatus @default(idle)
+  isFavorite    Boolean           @default(false) @map("is_favorite")
+  isDeleted     Boolean           @default(false) @map("is_deleted")
+  deletedAt     DateTime?         @map("deleted_at")
+  lastMessageAt DateTime          @default(now()) @map("last_message_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation AskAiConversation?
+
+  /// Sidebar list: newest first, keyset-paginated on (lastMessageAt, id).
+  @@index([userId, isDeleted, lastMessageAt(sort: Desc), id], map: "agent_threads_user_list_index")
+  @@index([userId, isFavorite, isDeleted, lastMessageAt(sort: Desc)], map: "agent_threads_user_favorite_index")
+  /// Stale-run sweep: running threads that stopped updating.
+  @@index([status, updatedAt], map: "agent_threads_status_updated_index")
+  @@map("agent_threads")
+}
+
+model AskAiConversation {
+  id             String   @id @default(cuid())
+  agentThreadId  String   @unique @map("agent_thread_id")
+  /// Mastra memory thread id on the agents side.
+  mastraThreadId String   @unique @map("mastra_thread_id") @db.VarChar(191)
+  /// Last cursor handed out; incremented atomically when an event is appended.
+  eventCursor    Int      @default(0) @map("event_cursor")
+  /// The turn currently streaming, or null when idle.
+  activeTurnId   String?  @map("active_turn_id") @db.VarChar(64)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  thread AgentThread        @relation(fields: [agentThreadId], references: [id], onDelete: Cascade)
+  events AskAiThreadEvent[]
+
+  @@map("ask_ai_conversations")
+}
+
+model AskAiThreadEvent {
+  id             String   @id @default(cuid())
+  conversationId String   @map("conversation_id")
+  eventCursor    Int      @map("event_cursor")
+  type           String   @db.VarChar(32)
+  payload        Json
+  /// Makes appends idempotent (e.g. `turn:<id>:assistant`).
+  dedupeKey      String   @map("dedupe_key") @db.VarChar(191)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation AskAiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, eventCursor], map: "ask_ai_thread_events_cursor_unique")
+  @@unique([conversationId, dedupeKey], map: "ask_ai_thread_events_dedupe_unique")
+  @@map("ask_ai_thread_events")
+}
+
+model AgentTokenUsage {
+  id             String   @id @default(cuid())
+  userId         BigInt   @map("user_id") @db.UnsignedBigInt
+  agentId        String   @map("agent_id") @db.VarChar(100)
+  threadId       String?  @map("thread_id") @db.VarChar(191)
+  turnId         String   @unique(map: "agent_token_usage_turn_unique") @map("turn_id") @db.VarChar(64)
+  modelId        String   @map("model_id") @db.VarChar(191)
+  inputTokens    Int      @default(0) @map("input_tokens")
+  outputTokens   Int      @default(0) @map("output_tokens")
+  totalTokens    Int      @default(0) @map("total_tokens")
+  creditsCharged Decimal  @default(0) @map("credits_charged") @db.Decimal(18, 6)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt], map: "agent_token_usage_user_created_index")
+  @@index([threadId, createdAt], map: "agent_token_usage_thread_created_index")
+  @@map("agent_token_usage")
+}

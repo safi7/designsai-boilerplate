@@ -1,0 +1,26 @@
+> Discover all available pages from the documentation index: https://mastra.ai/llms.txt
+
+# Memory.getThreadById()
+
+The `.getThreadById()` method retrieves a specific thread by its ID.
+
+## Usage example
+
+```typescript
+await memory?.getThreadById({ threadId: 'thread-123' })
+```
+
+## Parameters
+
+**threadId** (`string`): The ID of the thread to be retrieved.
+
+## Returns
+
+**thread** (`Promise<StorageThreadType | null>`): A promise that resolves to the thread associated with the given ID, or null if not found.
+
+### Related
+
+- [Memory Class Reference](https://mastra.ai/reference/memory/memory-class)
+- [Getting Started with Memory](https://mastra.ai/docs/memory/overview) (Covers threads concept)
+- [createThread](https://mastra.ai/reference/memory/createThread)
+- [listThreads](https://mastra.ai/reference/memory/listThreads)

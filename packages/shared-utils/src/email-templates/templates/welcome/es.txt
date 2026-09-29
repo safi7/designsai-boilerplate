@@ -1,0 +1,7 @@
+Hola, {{name}}
+
+Tu cuenta está verificada y lista. Te hemos añadido {{bonusCredits}} créditos gratis para que empieces a chatear ahora mismo.
+
+Abrir {{appName}}: {{appUrl}}
+
+— {{appName}}

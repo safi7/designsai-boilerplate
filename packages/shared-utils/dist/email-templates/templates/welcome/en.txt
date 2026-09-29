@@ -1,0 +1,7 @@
+Welcome, {{name}}
+
+Your account is verified and ready. We've added {{bonusCredits}} free credits so you can start chatting right away.
+
+Open {{appName}}: {{appUrl}}
+
+— {{appName}}

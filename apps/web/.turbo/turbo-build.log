@@ -1,0 +1,54 @@
+▲ Next.js 16.3.6 (Turbopack)
+✓ Running next.config.ts took 109ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.4s
+  Running TypeScript ...
+  Finished TypeScript in 2.8s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/19) ...
+  Generating static pages using 9 workers (4/19) 
+  Generating static pages using 9 workers (9/19) 
+  Generating static pages using 9 workers (14/19) 
+✓ Generating static pages using 9 workers (19/19) in 302ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├   /[locale]
+│ ├ ● /en
+│ └ ● /es
+├   /[locale]/account
+│ ├ ● /en/account
+│ └ ● /es/account
+├   /[locale]/account/billing
+│ ├ ● /en/account/billing
+│ └ ● /es/account/billing
+├   /[locale]/auth/forgot-password
+│ ├ ● /en/auth/forgot-password
+│ └ ● /es/auth/forgot-password
+├   /[locale]/auth/sign-in
+│ ├ ● /en/auth/sign-in
+│ └ ● /es/auth/sign-in
+├   /[locale]/auth/sign-up
+│ ├ ● /en/auth/sign-up
+│ └ ● /es/auth/sign-up
+├   /[locale]/auth/verify-email
+│ ├ ● /en/auth/verify-email
+│ └ ● /es/auth/verify-email
+├   /[locale]/chat
+│ ├ ● /en/chat
+│ └ ● /es/chat
+├ ƒ /[locale]/chat/[threadId]
+├ ƒ /health
+└ ○ /icon.svg
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,39 @@
+import { z } from 'zod';
+import { PageInfoSchema } from './common.js';
+/** Credit amounts cross the wire as decimal strings: floats cannot represent the ledger exactly. */
+export const CreditAmountSchema = z.string().regex(/^-?\d+(\.\d+)?$/);
+export const CreditBalanceResponseSchema = z.object({
+    balance: CreditAmountSchema,
+    /** Soonest expiry among sources that still hold credits. */
+    nextExpiry: z.object({ amount: CreditAmountSchema, expiresAt: z.string() }).nullable(),
+});
+export const CreditTransactionTypeSchema = z.enum(['grant', 'usage', 'refund', 'expiry', 'adjustment']);
+export const CreditTransactionSchema = z.object({
+    id: z.string(),
+    type: CreditTransactionTypeSchema,
+    amount: CreditAmountSchema,
+    balanceAfter: CreditAmountSchema,
+    description: z.string().nullable(),
+    referenceType: z.string().nullable(),
+    referenceId: z.string().nullable(),
+    createdAt: z.string(),
+});
+export const CreditTransactionListResponseSchema = z.object({
+    items: z.array(CreditTransactionSchema),
+    pageInfo: PageInfoSchema,
+});
+export const CreditPackageSchema = z.object({
+    packageId: z.string(),
+    name: z.string(),
+    credits: z.number().int(),
+    price: z.string(),
+    currency: z.string(),
+    validityDays: z.number().int().nullable(),
+});
+export const CreditPackageListResponseSchema = z.object({
+    packages: z.array(CreditPackageSchema),
+    checkoutEnabled: z.boolean(),
+});
+export const CheckoutRequestSchema = z.object({ packageId: z.string().min(1).max(50) });
+export const CheckoutResponseSchema = z.object({ checkoutUrl: z.string().url() });
+//# sourceMappingURL=credits.js.map

@@ -1,0 +1,45 @@
+{
+  "name": "designsai-boilerplate",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Production-grade AI chat monorepo: Next.js web, Hono API, Mastra agents, shared packages.",
+  "engines": {
+    "node": ">=22.13.0",
+    "yarn": ">=4.0.0"
+  },
+  "packageManager": "yarn@4.9.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "build:packages": "turbo build --filter='./packages/*'",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "test": "turbo test",
+    "test:coverage": "turbo test:coverage",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "db:generate": "yarn workspace @boilerplate/shared-prisma db:generate",
+    "db:migrate": "yarn workspace @boilerplate/shared-prisma db:migrate",
+    "db:migrate:dev": "yarn workspace @boilerplate/shared-prisma db:migrate:dev",
+    "db:studio": "yarn workspace @boilerplate/shared-prisma db:studio",
+    "db:seed": "yarn workspace @boilerplate/api db:seed"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "eslint": "^9.37.0",
+    "globals": "^15.12.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.18.1"
+  },
+  "resolutions": {
+    "zod": "3.25.76",
+    "@mastra/loggers": "1.2.0"
+  }
+}

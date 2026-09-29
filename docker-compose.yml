@@ -1,0 +1,181 @@
+# Full local stack: `make up` then open http://localhost:3000
+#
+#   web       http://localhost:3000   Next.js
+#   api       http://localhost:8000   Hono API (Swagger UI at /doc)
+#   agents    http://localhost:8111   Mastra runtime (internal token only)
+#   mailpit   http://localhost:8025   catches every outgoing email (OTP codes land here)
+#   minio     http://localhost:9001   object storage console (minioadmin / minioadmin)
+#
+# Every value has a working default; host ports are overridable (WEB_PORT,
+# API_PORT, MAILPIT_PORT, …) when they clash with something already running. Override any of them in a root `.env`
+# (see .env.example). Set AGENTS_MODEL_PROVIDER=openrouter + OPENROUTER_API_KEY
+# for real model answers; the default `mock` model needs no key.
+
+name: boilerplate
+
+x-internal-token: &internal-token ${API_TO_AGENTS_INTERNAL_TOKEN:-local-dev-internal-token-change-me-please-32+}
+
+services:
+  # ---------------------------------------------------------------- data tier
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-boilerplate}
+      MYSQL_USER: ${MYSQL_USER:-boilerplate}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-boilerplate}
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    ports: ['127.0.0.1:${MYSQL_PORT:-3306}:3306']
+    volumes: [mysql_data:/var/lib/mysql]
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p${MYSQL_ROOT_PASSWORD:-rootpassword}']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: agents
+      POSTGRES_USER: agents
+      POSTGRES_PASSWORD: ${AGENTS_POSTGRES_PASSWORD:-agents}
+    ports: ['127.0.0.1:${POSTGRES_PORT:-5433}:5432']
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U agents -d agents']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    command: ['valkey-server', '--appendonly', 'yes']
+    ports: ['127.0.0.1:${VALKEY_PORT:-6379}:6379']
+    volumes: [valkey_data:/data]
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  minio:
+    # minio/minio was removed from Docker Hub (MinIO stopped publishing community
+    # images in Oct 2025). Chainguard rebuilds it from source; only `latest` is free.
+    image: cgr.dev/chainguard/minio:latest
+    command: ['server', '/data', '--console-address', ':9001']
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_ACCESS_KEY:-minioadmin}
+    ports: ['127.0.0.1:${MINIO_PORT:-9000}:9000', '127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001']
+    volumes: [minio_data:/data]
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  mailpit:
+    image: axllent/mailpit:v1.31
+    ports: ['127.0.0.1:${MAILPIT_PORT:-8025}:8025', '127.0.0.1:${MAILPIT_SMTP_PORT:-1025}:1025']
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # ---------------------------------------------------------------- app tier
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: migrator
+    environment:
+      DOCKER_ENV: 'true'
+      DATABASE_URL: mysql://${MYSQL_USER:-boilerplate}:${MYSQL_PASSWORD:-boilerplate}@mysql:3306/${MYSQL_DATABASE:-boilerplate}
+      JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret-change-me-at-least-32-characters}
+      API_TO_AGENTS_INTERNAL_TOKEN: *internal-token
+    depends_on:
+      mysql: { condition: service_healthy }
+    restart: 'no'
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: runtime
+    environment:
+      NODE_ENV: production
+      DOCKER_ENV: 'true'
+      PORT: 8000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      APP_NAME: ${APP_NAME:-Boilerplate AI}
+      WEB_APP_URL: http://localhost:${WEB_PORT:-3000}
+      API_PUBLIC_URL: http://localhost:${API_PORT:-8000}
+      CORS_ORIGINS: http://localhost:${WEB_PORT:-3000}
+      DATABASE_URL: mysql://${MYSQL_USER:-boilerplate}:${MYSQL_PASSWORD:-boilerplate}@mysql:3306/${MYSQL_DATABASE:-boilerplate}?connection_limit=10
+      REDIS_URL: redis://valkey:6379
+      JWT_SECRET: ${JWT_SECRET:-local-dev-jwt-secret-change-me-at-least-32-characters}
+      # Local stack runs over plain HTTP, so the session cookie cannot be `Secure`.
+      AUTH_COOKIE_INSECURE: 'true'
+      API_DOCS_ENABLED: 'true'
+      EMAIL_TRANSPORT: smtp
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      EMAIL_FROM: ${EMAIL_FROM:-Boilerplate AI <no-reply@boilerplate.local>}
+      STORAGE_PROVIDER: minio
+      STORAGE_ENDPOINT: http://minio:9000
+      STORAGE_PUBLIC_ENDPOINT: http://localhost:${MINIO_PORT:-9000}
+      STORAGE_BUCKET: ${STORAGE_BUCKET:-boilerplate-assets}
+      STORAGE_ACCESS_KEY_ID: ${STORAGE_ACCESS_KEY_ID:-minioadmin}
+      STORAGE_SECRET_ACCESS_KEY: ${STORAGE_SECRET_ACCESS_KEY:-minioadmin}
+      AGENTS_BASE_URL: http://agents:8111
+      API_TO_AGENTS_INTERNAL_TOKEN: *internal-token
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    ports: ['127.0.0.1:${API_PORT:-8000}:8000']
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      valkey: { condition: service_healthy }
+      minio: { condition: service_healthy }
+      mailpit: { condition: service_healthy }
+      agents: { condition: service_healthy }
+    restart: unless-stopped
+
+  agents:
+    build:
+      context: .
+      dockerfile: apps/agents/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 8111
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      APP_NAME: ${APP_NAME:-Boilerplate AI}
+      API_TO_AGENTS_INTERNAL_TOKEN: *internal-token
+      AGENTS_STORAGE_DATABASE_URL: postgresql://agents:${AGENTS_POSTGRES_PASSWORD:-agents}@postgres:5432/agents
+      AGENTS_MODEL_PROVIDER: ${AGENTS_MODEL_PROVIDER:-mock}
+      AGENTS_CHAT_MODEL: ${AGENTS_CHAT_MODEL:-openrouter/openai/gpt-4o-mini}
+      AGENTS_TITLE_MODEL: ${AGENTS_TITLE_MODEL:-openrouter/openai/gpt-4o-mini}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+    ports: ['127.0.0.1:${AGENTS_PORT:-8111}:8111']
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:${API_PORT:-8000}
+        NEXT_PUBLIC_APP_NAME: ${APP_NAME:-Boilerplate AI}
+    ports: ['127.0.0.1:${WEB_PORT:-3000}:3000']
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  postgres_data:
+  valkey_data:
+  minio_data:
